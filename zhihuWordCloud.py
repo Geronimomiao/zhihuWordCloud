@@ -15,7 +15,7 @@ font = 'simfang.ttf'
 
 # 设置词云 背景图片
 d = path.dirname(__file__)
-bg_coloring = np.array(Image.open(path.join(d, "t12.png")))
+bg_coloring = np.array(Image.open(path.join(d, "t11.png")))
 
 # 使用 图片的背景色
 image_colors = ImageColorGenerator(bg_coloring)
