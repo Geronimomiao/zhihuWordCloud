@@ -10,3 +10,7 @@ pip3 install matplotlib numpy wordcloud jieba pillow
 
 python3 main.py
 
+
+[知乎话题链接](https://www.zhihu.com/question/281036323)
+
+![image](https://github.com/Geronimomiao/zhihuWordCloud/blob/master/img/281036323.png)
