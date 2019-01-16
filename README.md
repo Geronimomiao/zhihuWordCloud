@@ -9,3 +9,4 @@
 pip3 install matplotlib numpy wordcloud jieba pillow
 
 python3 main.py
+
