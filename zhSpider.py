@@ -12,17 +12,18 @@
 """
 __author__ = 'wsm'
 
-# https://www.zhihu.com/api/v4/questions/267653585/answers?include=content,data[*].voteup_count&limit=20&offset=30
+# https://www.zhihu.com/api/v4/questions/267653585/answers?include=content,data[*].voteup_count&limit=20&offset=0
 
 import json, os, requests
 from pyquery import PyQuery
 
-class zhihuSpider(object):
-    def __init__(self):
+class ZhiHuSpider(object):
+    def __init__(self, questionid):
         self.header = {
             'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3551.3 Safari/537.36'
         }
-        self.url = 'https://www.zhihu.com/api/v4/questions/267653585/answers?include=content,data[*].voteup_count&limit=20&offset=30'
+        self.questionid = questionid
+        self.url = 'https://www.zhihu.com/api/v4/questions/' + self.questionid + '/answers?include=content,data[*].voteup_count&limit=20&offset=0'
         self.path = os.path.dirname(__file__)
 
 
@@ -31,31 +32,30 @@ class zhihuSpider(object):
         json_obj = json.loads(json_str.content.decode('utf8'))
 
         content = json_obj['data']
-        for i in content:
-            # 过滤 html 标签
-            doc = PyQuery(i['content'])
-            self.formatContent(doc.text())
-        pass
+        if content:
+            self.url = json_obj['paging']['next']
 
+            for i in content:
+                # 过滤 html 标签
+                doc = PyQuery(i['content'])
+                self.formatContent(doc.text())
+        else:
+            self.url = ''
 
-        # data = json_obj.get('data')
-        # if data:
-        #     self.url = json_obj.get('paging').get('next')
-        # else:
-        #     self.url = ''
-        #
-        # for i in data:
-        #     self.formatContent(i.get('content').encode("utf8"))
 
     def formatContent(self, content):
-        with open(os.path.join(self.path, 'test.txt'), 'a+') as f:
+        with open(os.path.join(self.path, 'text/' + self.questionid + '.txt'), 'a+') as f:
             f.write(content + '\n')
             f.close()
 
     def run(self):
-        self.getContent()
+        while True:
+            if self.url == '':
+                break
+            self.getContent()
+        print('close')
 
 
 if __name__ == '__main__':
-    zsp = zhihuSpider()
+    zsp = ZhiHuSpider('281036323')
     zsp.run()
